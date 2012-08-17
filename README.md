@@ -1,5 +1,7 @@
 Make some monte carlo pie calculations
 
+Currently just does a simple (concurrent) PI approximation, as a proof of concept.
+
 # General approach
 1. Define domain of possible inputs
 2. Generate input randomy with some probability distribution
