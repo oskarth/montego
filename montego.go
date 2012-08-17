@@ -6,6 +6,7 @@ import (
   "runtime/pprof"
   "time"
   "fmt"
+  "flag"
 )
 
 // BENCHMARKS
@@ -15,6 +16,8 @@ import (
 // GOMAXPROCS 4: 4+s, no, 240ms!
 
 const NCPU = 4
+
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
 func withinCircle(x float64, y float64) bool {
 	return ((x*x + y*y) <= 1)
@@ -34,14 +37,17 @@ func worker(n int, ch chan float64) {
 }
 
 func main() {
-  f, err := os.Create("montego.pprof")
-  if err != nil {
-    panic(err)
+  flag.Parse()
+  if *cpuprofile != "" {
+    f, err := os.Create(*cpuprofile)
+    if err != nil {
+      panic(err)
+    }
+    if err := pprof.StartCPUProfile(f); err != nil {
+      panic(err)
+    }
+    defer pprof.StopCPUProfile()
   }
-  if err := pprof.StartCPUProfile(f); err != nil {
-    panic(err)
-  }
-  defer pprof.StopCPUProfile()
 
   ch := make(chan float64, NCPU)
 	n := 10000000 // number of points total

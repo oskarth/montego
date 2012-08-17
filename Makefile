@@ -1,4 +1,4 @@
 pprof:
 	go build montego.go
-	./montego
+	./montego -cpuprofile=montego.pprof
 	go tool pprof montego montego.pprof
